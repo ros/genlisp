@@ -25,7 +25,6 @@ macro(_generate_msg_lisp ARG_PKG ARG_MSG ARG_IFLAGS ARG_MSG_DEPS ARG_GEN_OUTPUT_
     ${ARG_IFLAGS}
     -p ${ARG_PKG}
     -o ${ARG_GEN_OUTPUT_DIR}
-    -e ${GENLISP_TEMPLATE_DIR}
     COMMENT "Generating Lisp code from ${ARG_PKG}/${MSG_NAME}"
     )
 
