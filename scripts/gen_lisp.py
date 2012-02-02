@@ -36,11 +36,13 @@
 ##
 ## Converts ROS .msg files in a package into Lisp source files
 
+import genlisp
 import sys
-import genmsg.template_tools
-
-msg_template_map = { 'msg.lisp.template':'@NAME@.lisp' }
-srv_template_map = { 'srv.lisp.template':'@NAME@.lisp' }
 
 if __name__ == "__main__":
-    genmsg.template_tools.generate_from_command_line_options(sys.argv, msg_template_map, srv_template_map)
+    if sys.argv[1].endswith('.msg'):
+        genlisp.generate_msg(sys.argv[1])
+    elif sys.argv[1].endswith('.srv'):
+        genlisp.generate_srv(sys.argv[1])
+    else:
+        raise ValueError('Invalid filename %s'%sys.argv[1])
