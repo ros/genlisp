@@ -40,9 +40,4 @@ import genlisp
 import sys
 
 if __name__ == "__main__":
-    if sys.argv[1].endswith('.msg'):
-        genlisp.generate_msg(sys.argv[1])
-    elif sys.argv[1].endswith('.srv'):
-        genlisp.generate_srv(sys.argv[1])
-    else:
-        raise ValueError('Invalid filename %s'%sys.argv[1])
+    genlisp.genlisp_main.genmain(sys.argv, 'gen_lisp.py')
