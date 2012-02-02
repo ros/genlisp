@@ -15,6 +15,4 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/genlisp
 
 install(FILES stack.yaml DESTINATION share/${PROJECT_NAME})
 
-#catkin_export_python()
-
-add_subdirectory(scripts)
+catkin_export_python(src)
