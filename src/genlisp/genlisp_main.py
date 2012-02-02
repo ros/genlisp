@@ -9,7 +9,7 @@ import genmsg
 import genmsg.command_line
 
 from genmsg import MsgGenerationException
-from . generate import generate_msg
+from . generate import generate_msg, generate_srv
 
 def usage(progname):
     print("%(progname)s file(s)"%vars())
@@ -33,7 +33,11 @@ def genmain(argv, progname):
                 if not os.path.exists(options.outdir):
                     raise
         search_path = genmsg.command_line.includepath_to_dict(options.includepath)
-        retcode = generate_msg(options.package, args[1:], options.outdir, search_path)
+        filename = args[1]
+        if filename.endswith('.msg'):
+            retcode = generate_msg(options.package, args[1:], options.outdir, search_path)
+        else:
+            retcode = generate_srv(options.package, args[1:], options.outdir, search_path)
     except genmsg.InvalidMsgSpec as e:
         print("ERROR: ", e, file=sys.stderr)
         retcode = 1

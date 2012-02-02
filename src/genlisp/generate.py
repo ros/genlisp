@@ -51,6 +51,7 @@ import re
 #import roslib.packages
 #import roslib.gentools
 from genmsg import SrvSpec, MsgSpec, MsgContext
+from genmsg.msg_loader import load_srv_from_file, load_msg_by_type
 import genmsg.gentools
 
 try:
@@ -489,20 +490,19 @@ def write_class_exports(s, msgs, pkg):
                 s.write('"%s"'%m.upper())
         s.write('))\n\n')
 
-def write_srv_exports(s, pkg):
+def write_srv_exports(s, srvs, pkg):
     "Write the _package.lisp file for a service directory"
     s.write('(cl:defpackage %s-srv'%pkg, False)
     with Indent(s):
         s.write('(:use )')
         s.write('(:export')
         with Indent(s, inc=1):
-            for spec in roslib.srvs.get_pkg_srv_specs(pkg)[0]:
-                (_, srv_type) = spec[0].split('/')
-                s.write('"%s"'%srv_type.upper())
-                s.write('"<%s-REQUEST>"'%srv_type.upper())
-                s.write('"%s-REQUEST"'%srv_type.upper())
-                s.write('"<%s-RESPONSE>"'%srv_type.upper())
-                s.write('"%s-RESPONSE"'%srv_type.upper())
+            for srv in srvs:
+                s.write('"%s"'%srv.upper())
+                s.write('"<%s-REQUEST>"'%srv.upper())
+                s.write('"%s-REQUEST"'%srv.upper())
+                s.write('"<%s-RESPONSE>"'%srv.upper())
+                s.write('"%s-RESPONSE"'%srv.upper())
         s.write('))\n\n')
 
 
@@ -523,25 +523,26 @@ def write_asd_deps(s, deps, msgs):
                 
 
 
-def write_srv_asd(s, pkg):
+def write_srv_asd(s, pkg, srvs, context):
     s.write('(cl:in-package :asdf)')
     s.newline()
     s.write('(defsystem "%s-srv"'%pkg)
-    services = roslib.srvs.get_pkg_srv_specs(pkg)[0]
 
     # Figure out set of depended-upon ros packages
     deps = set()
-    for (_, spec) in services:
-        for f in spec.request.parsed_fields():
+    for srv in srvs:
+        req_spec = context.get_registered('%s/%sRequest'%(pkg, srv))
+        resp_spec = context.get_registered('%s/%sResponse'%(pkg, srv))
+        for f in req_spec.parsed_fields():
             if not f.is_builtin:
                 (p, _) = parse_msg_type(f)
                 deps.add(p)
-        for f in spec.response.parsed_fields():
+        for f in resp_spec.parsed_fields():
             if not f.is_builtin:
                 (p, _) = parse_msg_type(f)
                 deps.add(p)
 
-    write_asd_deps(s, deps, services)
+    write_asd_deps(s, deps, srvs)
 
 
 def write_asd(s, pkg, msgs, context):
@@ -589,8 +590,6 @@ def write_ros_datatype(s, spec):
             s.write('"%s")'%spec.full_name)
 
 def write_md5sum(s, msg_context, spec, parent=None):
-    if parent is None:
-        parent = spec
     md5sum = genmsg.compute_md5(msg_context, spec)
     for c in (message_class(spec), new_message_class(spec)):
         s.write('(cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql \'%s)))'%c)
@@ -681,7 +680,7 @@ def write_constants(s, spec):
             s.write(')')
 
 
-def write_srv_component(s, spec, parent):
+def write_srv_component(s, spec, context):
     spec.component_type='service'
     write_html_include(s, spec)
     write_defclass(s, spec)
@@ -690,8 +689,8 @@ def write_srv_component(s, spec, parent):
     write_serialize(s, spec)
     write_deserialize(s, spec)
     write_ros_datatype(s, spec)
-    write_md5sum(s, spec, parent)
-    write_message_definition(s, spec)
+    write_md5sum(s, context, spec)
+    write_message_definition(s, context, spec)
     write_serialization_length(s, spec)
     write_list_converter(s, spec)
 
@@ -721,6 +720,18 @@ def generate_msg(pkg, files, out_dir, search_path):
         full_type = genmsg.gentools.compute_full_type_name(pkg, infile)
         spec = genmsg.msg_loader.load_msg_from_file(msg_context, f, full_type)
         generate_msg_from_spec(msg_context, spec, search_path, out_dir, pkg)
+
+def generate_srv(pkg, files, out_dir, search_path):
+    """
+    Generate lisp code for all services in a package
+    """
+    msg_context = MsgContext.create_default()
+    for f in files:
+        f = os.path.abspath(f)
+        infile = os.path.basename(f)
+        full_type = genmsg.gentools.compute_full_type_name(pkg, infile)
+        spec = genmsg.msg_loader.load_srv_from_file(msg_context, f, full_type)
+        generate_srv_from_spec(msg_context, spec, search_path, out_dir, pkg, f)
 
 def msg_list(pkg, search_path, ext):
     d = search_path[pkg]
@@ -814,18 +825,13 @@ def generate_msg_from_spec(msg_context, spec, search_path, output_dir, package):
     io.close()
 
 # t0 most of this could probably be refactored into being shared with messages
-def generate_srv(srv_path):
+def generate_srv_from_spec(msg_context, spec, search_path, output_dir, package, path):
     "Generate code from .srv file"
-    (pkg_dir, pkg) = roslib.packages.get_dir_pkg(srv_path)
-    (_, spec) = roslib.srvs.load_from_file(srv_path, pkg)
-    output_dir = '%s/srv_gen/lisp'%pkg_dir
-    if (not os.path.exists(output_dir)):
-        # if we're being run concurrently, the above test can report false but os.makedirs can still fail if
-        # another copy just created the directory
-        try:
-            os.makedirs(output_dir)
-        except OSError as e:
-            pass
+    genmsg.msg_loader.load_depends(msg_context, spec, search_path)
+    ext = '.srv'
+    srvs = [f[:-len(ext)] for f in os.listdir(os.path.dirname(path)) if f.endswith(ext)]
+    for s in srvs:
+        load_srv_from_file(msg_context, path, '%s/%s'%(package, s))
 
     ########################################
     # 1. Write the .lisp file
@@ -833,12 +839,12 @@ def generate_srv(srv_path):
 
     io = StringIO()
     s = IndentedWriter(io)
-    write_begin(s, spec, srv_path, True)
+    write_begin(s, spec, True)
     spec.request.actual_name='%s-request'%spec.short_name
     spec.response.actual_name='%s-response'%spec.short_name
-    write_srv_component(s, spec.request, spec)
+    write_srv_component(s, spec.request, msg_context)
     s.newline()
-    write_srv_component(s, spec.response, spec)
+    write_srv_component(s, spec.response, msg_context)
     write_service_specific_methods(s, spec)
     
     with open('%s/%s.lisp'%(output_dir, spec.short_name), 'w') as f:
@@ -863,7 +869,7 @@ def generate_srv(srv_path):
 
     io = StringIO()
     s = IndentedWriter(io)
-    write_srv_exports(s, pkg)
+    write_srv_exports(s, srvs, package)
     with open('%s/_package.lisp'%output_dir, 'w') as f:
         f.write(io.getvalue())
     io.close()
@@ -874,8 +880,8 @@ def generate_srv(srv_path):
 
     io = StringIO()
     s = IndentedWriter(io)
-    write_srv_asd(s, pkg)
-    with open('%s/%s-srv.asd'%(output_dir, pkg), 'w') as f:
+    write_srv_asd(s, package, srvs, msg_context)
+    with open('%s/%s-srv.asd'%(output_dir, package), 'w') as f:
         f.write(io.getvalue())
     io.close()
     
