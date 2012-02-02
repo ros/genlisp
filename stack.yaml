@@ -9,4 +9,4 @@ Depends: catkin, genmsg
 
 Catkin-CopyrightType:  willowgarage
 Catkin-DebRulesType: python_distutils
-Catkin-ROS-Message-Generator: py
+Catkin-ROS-Message-Generator: lisp
