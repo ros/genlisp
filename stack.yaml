@@ -1,14 +1,12 @@
 Catkin-ProjectName: genlisp
-Description: ROS message generation for Lisp
-Author: Morten Kjaergaard <mkjargaard@willowgarage.com>
-Maintainer:
+Version: 0.1.0
+Description: ROS message generators for Lisp
+Author: Bhaskara Marthi <bhaskara@willowgarage.com>
+Maintainer: Bhaskara Marthi <bhaskara@willowgarage.com>
 Homepage: http://www.ros.org
 
 Depends: catkin, genmsg
 
-Version: 0.0.0
-
 Catkin-CopyrightType:  willowgarage
 Catkin-DebRulesType: python_distutils
-Catkin-ROS-Message-Generator: lisp
-
+Catkin-ROS-Message-Generator: py
