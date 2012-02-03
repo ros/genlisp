@@ -590,7 +590,7 @@ def write_ros_datatype(s, spec):
             s.write('"%s")'%spec.full_name)
 
 def write_md5sum(s, msg_context, spec, parent=None):
-    md5sum = genmsg.compute_md5(msg_context, spec)
+    md5sum = genmsg.compute_md5(msg_context, parent or spec)
     for c in (message_class(spec), new_message_class(spec)):
         s.write('(cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql \'%s)))'%c)
         with Indent(s):
@@ -680,7 +680,7 @@ def write_constants(s, spec):
             s.write(')')
 
 
-def write_srv_component(s, spec, context):
+def write_srv_component(s, spec, context, parent):
     spec.component_type='service'
     write_html_include(s, spec)
     write_defclass(s, spec)
@@ -689,7 +689,7 @@ def write_srv_component(s, spec, context):
     write_serialize(s, spec)
     write_deserialize(s, spec)
     write_ros_datatype(s, spec)
-    write_md5sum(s, context, spec)
+    write_md5sum(s, context, spec, parent=parent)
     write_message_definition(s, context, spec)
     write_serialization_length(s, spec)
     write_list_converter(s, spec)
@@ -842,9 +842,9 @@ def generate_srv_from_spec(msg_context, spec, search_path, output_dir, package, 
     write_begin(s, spec, True)
     spec.request.actual_name='%s-request'%spec.short_name
     spec.response.actual_name='%s-response'%spec.short_name
-    write_srv_component(s, spec.request, msg_context)
+    write_srv_component(s, spec.request, msg_context, spec)
     s.newline()
-    write_srv_component(s, spec.response, msg_context)
+    write_srv_component(s, spec.response, msg_context, spec)
     write_service_specific_methods(s, spec)
     
     with open('%s/%s.lisp'%(output_dir, spec.short_name), 'w') as f:
