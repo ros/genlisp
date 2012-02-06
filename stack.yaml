@@ -1,5 +1,5 @@
 Catkin-ProjectName: genlisp
-Version: 0.1.0
+Version: 0.1.1
 Description: ROS message generators for Lisp
 Author: Bhaskara Marthi <bhaskara@willowgarage.com>
 Maintainer: Bhaskara Marthi <bhaskara@willowgarage.com>
