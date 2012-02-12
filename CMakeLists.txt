@@ -3,6 +3,7 @@ project(genlisp)
 find_package(catkin)
 find_package(genmsg)
 
+catkin_stack()
 catkin_project(genlisp
   VERSION 0.0.0
   CFG_EXTRAS genlisp-extras.cmake
