@@ -7,9 +7,12 @@ else()
   set(GENLISP_TEMPLATE_DIR @CMAKE_INSTALL_PREFIX@/share/genlisp)
 endif()
 
-# Generate .msg->.lisp
+# Generate .msg or .srv -> .lisp
 # The generated .lisp files should be added ALL_GEN_OUTPUT_FILES_lisp
-macro(_generate_msg_lisp ARG_PKG ARG_MSG ARG_IFLAGS ARG_MSG_DEPS ARG_GEN_OUTPUT_DIR)
+macro(_generate_lisp ARG_PKG ARG_MSG ARG_IFLAGS ARG_MSG_DEPS ARG_GEN_OUTPUT_DIR)
+
+  #Append msg to output dir
+  set(GEN_OUTPUT_DIR "${ARG_GEN_OUTPUT_DIR}/msg")
 
   #Create input and output filenames
   get_filename_component(MSG_NAME ${ARG_MSG} NAME)
@@ -33,10 +36,17 @@ macro(_generate_msg_lisp ARG_PKG ARG_MSG ARG_IFLAGS ARG_MSG_DEPS ARG_GEN_OUTPUT_
 endmacro()
 
 #genlisp uses the same program to generate srv and msg files, so call the same macro
+macro(_generate_msg_lisp ARG_PKG ARG_MSG ARG_IFLAGS ARG_MSG_DEPS ARG_GEN_OUTPUT_DIR)
+  _generate_lisp(${ARG_PKG} ${ARG_MSG} "${ARG_IFLAGS}" "${ARG_MSG_DEPS}" "${ARG_GEN_OUTPUT_DIR}/msg")
+endmacro()
+
+#genlisp uses the same program to generate srv and msg files, so call the same macro
 macro(_generate_srv_lisp ARG_PKG ARG_SRV ARG_IFLAGS ARG_MSG_DEPS ARG_GEN_OUTPUT_DIR)
-  _generate_msg_lisp(${ARG_PKG} ${ARG_SRV} "${ARG_IFLAGS}" "${ARG_MSG_DEPS}" ${ARG_GEN_OUTPUT_DIR})
+  _generate_lisp(${ARG_PKG} ${ARG_SRV} "${ARG_IFLAGS}" "${ARG_MSG_DEPS}" "${ARG_GEN_OUTPUT_DIR}/srv")
 endmacro()
 
 macro(_generate_module_lisp)
   # the macros, they do nothing
 endmacro()
+
+set(genlisp_INSTALL_DIR share/roslisp)
