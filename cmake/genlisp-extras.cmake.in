@@ -49,4 +49,4 @@ macro(_generate_module_lisp)
   # the macros, they do nothing
 endmacro()
 
-set(genlisp_INSTALL_DIR share/roslisp)
+set(genlisp_INSTALL_DIR share/${PROJECT_NAME}/lisp)
