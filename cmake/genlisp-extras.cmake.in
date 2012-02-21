@@ -38,15 +38,22 @@ endmacro()
 #genlisp uses the same program to generate srv and msg files, so call the same macro
 macro(_generate_msg_lisp ARG_PKG ARG_MSG ARG_IFLAGS ARG_MSG_DEPS ARG_GEN_OUTPUT_DIR)
   _generate_lisp(${ARG_PKG} ${ARG_MSG} "${ARG_IFLAGS}" "${ARG_MSG_DEPS}" "${ARG_GEN_OUTPUT_DIR}/msg")
+  install(CODE
+    "execute_process(COMMAND mkdir -p ${CMAKE_INSTALL_PREFIX}/${common_lisp_INSTALL_DIR}/systems
+                     COMMAND ln -s ../ros/${PROJECT_NAME}/msg/${PROJECT_NAME}-msg.asd ${CMAKE_INSTALL_PREFIX}/${common_lisp_INSTALL_DIR}/systems/${PROJECT_NAME}-msg.asd)")
 endmacro()
 
 #genlisp uses the same program to generate srv and msg files, so call the same macro
 macro(_generate_srv_lisp ARG_PKG ARG_SRV ARG_IFLAGS ARG_MSG_DEPS ARG_GEN_OUTPUT_DIR)
   _generate_lisp(${ARG_PKG} ${ARG_SRV} "${ARG_IFLAGS}" "${ARG_MSG_DEPS}" "${ARG_GEN_OUTPUT_DIR}/srv")
+  install(CODE
+    "execute_process(COMMAND mkdir -p ${CMAKE_INSTALL_PREFIX}/${common_lisp_INSTALL_DIR}/systems
+                     COMMAND ln -s ../ros/${PROJECT_NAME}/srv/${PROJECT_NAME}-srv.asd ${CMAKE_INSTALL_PREFIX}/${common_lisp_INSTALL_DIR}/systems/${PROJECT_NAME}-srv.asd)")
 endmacro()
 
 macro(_generate_module_lisp)
   # the macros, they do nothing
 endmacro()
 
-set(genlisp_INSTALL_DIR share/${PROJECT_NAME}/lisp)
+set(common_lisp_INSTALL_DIR share/common-lisp)
+set(genlisp_INSTALL_DIR ${common_lisp_INSTALL_DIR}/ros)
