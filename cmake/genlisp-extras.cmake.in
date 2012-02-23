@@ -44,26 +44,6 @@ macro(_generate_srv_lisp ARG_PKG ARG_SRV ARG_IFLAGS ARG_MSG_DEPS ARG_GEN_OUTPUT_
 endmacro()
 
 macro(_generate_module_lisp ARG_PKG ARG_GEN_OUTPUT_DIR ARG_GENERATED_FILES)
-  set(GEN_ASDF_SYSTEMS_DIR ${ARG_GEN_OUTPUT_DIR}/../systems)
-  file(MAKE_DIRECTORY ${GEN_ASDF_SYSTEMS_DIR})
-
-  install(CODE
-    "file(MAKE_DIRECTORY ${CMAKE_INSTALL_PREFIX}/${common_lisp_INSTALL_DIR}/systems)")
-  foreach(type "msg" "srv")
-    set(GEN_OUTPUT_DIR ${ARG_GEN_OUTPUT_DIR}/${type})
-    set(GEN_OUTPUT_FILE ${ARG_GEN_OUTPUT_DIR}/${type}/${ARG_PKG}-${type}.asd)
-
-    if(IS_DIRECTORY ${GEN_OUTPUT_DIR})
-      add_custom_command(OUTPUT ${GEN_OUTPUT_FILE}
-        DEPENDS ${ARG_GENERATED_FILES}
-        COMMAND ln -fs ${GEN_OUTPUT_FILE} ${GEN_ASDF_SYSTEMS_DIR}
-        COMMENT "Linking Lisp ${type} asd file for ${ARG_PKG}")
-      list(APPEND ALL_GEN_OUTPUT_FILES_lisp ${GEN_OUTPUT_FILE})
-      install(CODE
-        "execute_process(
-           COMMAND ln -s ../ros/${PROJECT_NAME}/${type}/${PROJECT_NAME}-${type}.asd ${CMAKE_INSTALL_PREFIX}/${common_lisp_INSTALL_DIR}/systems/${PROJECT_NAME}-${type}.asd)")
-    endif()
-  endforeach()
 endmacro()
 
 set(common_lisp_INSTALL_DIR share/common-lisp)
