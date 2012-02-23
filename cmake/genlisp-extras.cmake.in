@@ -10,9 +10,7 @@ endif()
 # Generate .msg or .srv -> .lisp
 # The generated .lisp files should be added ALL_GEN_OUTPUT_FILES_lisp
 macro(_generate_lisp ARG_PKG ARG_MSG ARG_IFLAGS ARG_MSG_DEPS ARG_GEN_OUTPUT_DIR)
-
-  #Append msg to output dir
-  set(GEN_OUTPUT_DIR "${ARG_GEN_OUTPUT_DIR}/msg")
+  file(MAKE_DIRECTORY ${ARG_GEN_OUTPUT_DIR})
 
   #Create input and output filenames
   get_filename_component(MSG_NAME ${ARG_MSG} NAME)
@@ -45,8 +43,8 @@ macro(_generate_srv_lisp ARG_PKG ARG_SRV ARG_IFLAGS ARG_MSG_DEPS ARG_GEN_OUTPUT_
   _generate_lisp(${ARG_PKG} ${ARG_SRV} "${ARG_IFLAGS}" "${ARG_MSG_DEPS}" "${ARG_GEN_OUTPUT_DIR}/srv")
 endmacro()
 
-macro(_generate_module_lisp)
-  # the macros, they do nothing
+macro(_generate_module_lisp ARG_PKG ARG_GEN_OUTPUT_DIR ARG_GENERATED_FILES)
 endmacro()
 
-set(genlisp_INSTALL_DIR share/${PROJECT_NAME}/lisp)
+set(common_lisp_INSTALL_DIR share/common-lisp)
+set(genlisp_INSTALL_DIR ${common_lisp_INSTALL_DIR}/ros)
