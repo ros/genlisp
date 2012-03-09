@@ -1,5 +1,3 @@
-
-
 # Software License Agreement (BSD License)
 #
 # Copyright (c) 2009, Willow Garage, Inc.
@@ -734,11 +732,11 @@ def generate_srv(pkg, files, out_dir, search_path):
         generate_srv_from_spec(msg_context, spec, search_path, out_dir, pkg, f)
 
 def msg_list(pkg, search_path, ext):
-    d = search_path[pkg]
-    files = [f for f in os.listdir(d) if f.endswith(ext)]
+    dir_list = search_path[pkg]
+    files = []
+    for d in dir_list:
+        files.extend([f for f in os.listdir(d) if f.endswith(ext)])
     return [f[:-len(ext)] for f in files]
-        
-            
 
 def generate_msg_from_spec(msg_context, spec, search_path, output_dir, package):
     """
