@@ -13,6 +13,6 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/genlisp
   DESTINATION etc/langs
 )
 
-install(FILES stack.yaml DESTINATION share/${PROJECT_NAME})
+install(FILES stack.xml DESTINATION share/${PROJECT_NAME})
 
 catkin_python_setup()
