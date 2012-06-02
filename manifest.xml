@@ -1,5 +1,4 @@
 <package>
-  <catkin/>
   <description brief="genlisp">
 
      Common-Lisp ROS message and service generators.
