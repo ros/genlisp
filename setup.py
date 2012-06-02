@@ -1,22 +1,23 @@
 #!/usr/bin/env python
 
-import rospkg.stack
 from setuptools import setup
 import sys
+from xml.etree.ElementTree import ElementTree
 
 try:
-    version = rospkg.stack.parse_stack_file('stack.xml').version
+    root = ElementTree('stack', 'stack.xml')
+    version = root.findtext('version')
 except Exception, e:
     print >> sys.stderr, 'Could not extract version from your stack.xml:\n%s' % e
     sys.exit(-1)
 
 sys.path.insert(0, 'src')
 
-setup(name='genlisp',
-      version= version,
-      packages=['genlisp'],
-      package_dir = {'':'src'},
-      install_requires=['genmsg'],
+setup(name = 'genlisp',
+      version = version,
+      packages = ['genlisp'],
+      package_dir = {'': 'src'},
+      install_requires = ['genmsg'],
       scripts = ['scripts/gen_lisp.py'],
       author = "Bhaskara Marthi",
       author_email = "bhaskara@willowgarage.com",
