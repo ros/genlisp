@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 project(genlisp)
-find_package(catkin)
-find_package(genmsg)
+find_package(catkin REQUIRED)
 
 catkin_stack()
 catkin_project(genlisp
