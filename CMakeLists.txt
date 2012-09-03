@@ -12,6 +12,4 @@ install(FILES ${catkin_BUILD_PREFIX}/etc/langs/genlisp
   DESTINATION etc/langs
 )
 
-install(FILES stack.xml DESTINATION share/${PROJECT_NAME})
-
 catkin_python_setup()
