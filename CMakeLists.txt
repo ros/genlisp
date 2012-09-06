@@ -1,15 +1,13 @@
 cmake_minimum_required(VERSION 2.8)
 project(genlisp)
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED COMPONENTS genmsg)
 
 catkin_stack()
-catkin_project(genlisp
-  CFG_EXTRAS genlisp-extras.cmake
-  )
+catkin_project(${PROJECT_NAME}
+  CFG_EXTRAS genlisp-extras.cmake)
 
-file(WRITE ${catkin_BUILD_PREFIX}/etc/langs/genlisp "LISP")
-install(FILES ${catkin_BUILD_PREFIX}/etc/langs/genlisp
-  DESTINATION etc/langs
-)
+file(WRITE ${CATKIN_BUILD_PREFIX}/${GENMSG_LANGS_DESTINATION}/genlisp "LISP")
+install(FILES ${CATKIN_BUILD_PREFIX}/${GENMSG_LANGS_DESTINATION}/genlisp
+  DESTINATION ${GENMSG_LANGS_DESTINATION})
 
 catkin_python_setup()
