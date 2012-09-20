@@ -11,9 +11,9 @@
   <url type="website">http://www.ros.org/wiki/roslisp</url>
   <author email="bhaskara@willowgarage.com">Bhaskara Marti</author>
 
-  <build_depends>catkin</build_depends>
-  <build_depends>genmsg</build_depends>
-  <run_depends>genmsg</run_depends>
+  <build_depend>catkin</build_depend>
+  <build_depend>genmsg</build_depend>
+  <run_depend>genmsg</run_depend>
 
   <export>
     <message_generator>lisp</message_generator>
