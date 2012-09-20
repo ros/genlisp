@@ -3,7 +3,7 @@ project(genlisp)
 find_package(catkin REQUIRED COMPONENTS genmsg)
 
 catkin_stack()
-catkin_project(${PROJECT_NAME}
+catkin_package(${PROJECT_NAME}
   CFG_EXTRAS genlisp-extras.cmake)
 
 file(WRITE ${CATKIN_BUILD_PREFIX}/${GENMSG_LANGS_DESTINATION}/genlisp "LISP")
