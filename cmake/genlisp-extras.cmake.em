@@ -1,10 +1,12 @@
-if(@BUILDSPACE@)
-  set(GENLISP_BIN @CMAKE_CURRENT_SOURCE_DIR@/scripts/gen_lisp.py)
-  set(GENLISP_TEMPLATE_DIR @CMAKE_CURRENT_SOURCE_DIR@/scripts)
-else()
-  set(GENLISP_BIN @CMAKE_INSTALL_PREFIX@/@CATKIN_PACKAGE_BIN_DESTINATION@/gen_lisp.py)
-  set(GENLISP_TEMPLATE_DIR @CMAKE_INSTALL_PREFIX@/@CATKIN_PACKAGE_SHARE_DESTINATION@)
-endif()
+@[if BUILDSPACE]@
+# bin and template dir variables in buildspace
+set(GENLISP_BIN @(CMAKE_CURRENT_SOURCE_DIR)/scripts/gen_lisp.py)
+set(GENLISP_TEMPLATE_DIR @(CMAKE_CURRENT_SOURCE_DIR)/scripts)
+@[else]@
+# bin and template dir variables in installspace
+set(GENLISP_BIN @(CMAKE_INSTALL_PREFIX)/@(CATKIN_PACKAGE_BIN_DESTINATION)/gen_lisp.py)
+set(GENLISP_TEMPLATE_DIR @(CMAKE_INSTALL_PREFIX)/@(CATKIN_PACKAGE_SHARE_DESTINATION))
+@[end if]@
 
 # Generate .msg or .srv -> .lisp
 # The generated .lisp files should be added ALL_GEN_OUTPUT_FILES_lisp
