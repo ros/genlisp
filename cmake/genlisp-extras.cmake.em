@@ -1,5 +1,5 @@
-@[if BUILDSPACE]@
-# bin and template dir variables in buildspace
+@[if DEVELSPACE]@
+# bin and template dir variables in develspace
 set(GENLISP_BIN @(CMAKE_CURRENT_SOURCE_DIR)/scripts/gen_lisp.py)
 set(GENLISP_TEMPLATE_DIR @(CMAKE_CURRENT_SOURCE_DIR)/scripts)
 @[else]@
