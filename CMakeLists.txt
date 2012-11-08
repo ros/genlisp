@@ -3,8 +3,9 @@ project(genlisp)
 find_package(catkin REQUIRED COMPONENTS genmsg)
 
 catkin_package(
-  DEPENDS genmsg
-  CFG_EXTRAS genlisp-extras.cmake)
+  CATKIN_DEPENDS genmsg
+  CFG_EXTRAS genlisp-extras.cmake
+)
 
 add_subdirectory(scripts)
 
