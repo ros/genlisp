@@ -734,7 +734,9 @@ def generate_srv(pkg, files, out_dir, search_path):
 def msg_list(pkg, search_path, ext):
     dir_list = search_path[pkg]
     files = []
-    for d in dir_list:
+    # Converting dir_list to a set in order to remove duplicate search paths
+    dir_set = set(dir_list)
+    for d in dir_set:
         files.extend([f for f in os.listdir(d) if f.endswith(ext)])
     return [f[:-len(ext)] for f in files]
 
@@ -745,6 +747,7 @@ def generate_msg_from_spec(msg_context, spec, search_path, output_dir, package):
     @param msg_path: The path to the .msg file
     @type msg_path: str
     """
+    
     genmsg.msg_loader.load_depends(msg_context, spec, search_path)
     spec.actual_name=spec.short_name
     spec.component_type='message'
