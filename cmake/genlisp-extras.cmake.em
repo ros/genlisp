@@ -4,8 +4,8 @@ set(GENLISP_BIN "@(CMAKE_CURRENT_SOURCE_DIR)/scripts/gen_lisp.py")
 set(GENLISP_TEMPLATE_DIR "@(CMAKE_CURRENT_SOURCE_DIR)/scripts")
 @[else]@
 # bin and template dir variables in installspace
-set(GENLISP_BIN "@(CMAKE_INSTALL_PREFIX)/@(CATKIN_PACKAGE_BIN_DESTINATION)/gen_lisp.py")
-set(GENLISP_TEMPLATE_DIR "@(CMAKE_INSTALL_PREFIX)/@(CATKIN_PACKAGE_SHARE_DESTINATION)")
+set(GENLISP_BIN "${genlisp_DIR}/../../../@(CATKIN_PACKAGE_BIN_DESTINATION)/gen_lisp.py")
+set(GENLISP_TEMPLATE_DIR "${genlisp_DIR}/..")
 @[end if]@
 
 # Generate .msg or .srv -> .lisp
