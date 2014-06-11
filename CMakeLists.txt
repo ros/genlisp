@@ -13,4 +13,9 @@ file(WRITE ${CATKIN_DEVEL_PREFIX}/${GENMSG_LANGS_DESTINATION}/genlisp "LISP")
 install(FILES ${CATKIN_DEVEL_PREFIX}/${GENMSG_LANGS_DESTINATION}/genlisp
   DESTINATION ${GENMSG_LANGS_DESTINATION})
 
+# drop marker file to prevent rospack from spending time on crawling this folder
+file(WRITE ${CATKIN_DEVEL_PREFIX}/share/common-lisp/rospack_nosubdirs "")
+install(FILES ${CATKIN_DEVEL_PREFIX}/share/common-lisp/rospack_nosubdirs
+  DESTINATION share/common-lisp)
+
 catkin_python_setup()
