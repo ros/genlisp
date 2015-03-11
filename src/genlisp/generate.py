@@ -829,7 +829,7 @@ def generate_srv_from_spec(msg_context, spec, search_path, output_dir, package, 
     ext = '.srv'
     srvs = [f[:-len(ext)] for f in os.listdir(os.path.dirname(path)) if f.endswith(ext)]
     for s in srvs:
-        load_srv_from_file(msg_context, path, '%s/%s'%(package, s))
+        load_srv_from_file(msg_context, '%s/%s.srv'%(os.path.dirname(path),s), '%s/%s'%(package, s))
 
     ########################################
     # 1. Write the .lisp file
