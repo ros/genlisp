@@ -827,9 +827,10 @@ def generate_srv_from_spec(msg_context, spec, search_path, output_dir, package, 
     "Generate code from .srv file"
     genmsg.msg_loader.load_depends(msg_context, spec, search_path)
     ext = '.srv'
-    srvs = [f[:-len(ext)] for f in os.listdir(os.path.dirname(path)) if f.endswith(ext)]
-    for s in srvs:
-        load_srv_from_file(msg_context, '%s/%s.srv'%(os.path.dirname(path),s), '%s/%s'%(package, s))
+    srv_path = os.path.dirname(path)
+    srvs = [f[:-len(ext)] for f in os.listdir(srv_path) if f.endswith(ext)]
+    for srv in srvs:
+        load_srv_from_file(msg_context, '%s/%s%s'%(srv_path, srv, ext), '%s/%s'%(package, srv))
 
     ########################################
     # 1. Write the .lisp file
