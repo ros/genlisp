@@ -828,7 +828,7 @@ def generate_srv_from_spec(msg_context, spec, search_path, output_dir, package, 
     genmsg.msg_loader.load_depends(msg_context, spec, search_path)
     ext = '.srv'
     srv_path = os.path.dirname(path)
-    srvs = [f[:-len(ext)] for f in os.listdir(srv_path) if f.endswith(ext)]
+    srvs = msg_list(package, {package: [srv_path]}, ext)
     for srv in srvs:
         load_srv_from_file(msg_context, '%s/%s%s'%(srv_path, srv, ext), '%s/%s'%(package, srv))
 
