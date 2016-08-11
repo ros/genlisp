@@ -607,6 +607,7 @@ def write_message_definition(s, msg_context, spec):
             for line in lines:
                 l = line.replace('\\', '\\\\')
                 l = l.replace('"', '\\"')
+                l = l.replace('~', '~~')
                 s.write('%s~%%'%l, indent=False)
             s.write('~%', indent=False)
             s.write('"))', indent=False)
