@@ -736,7 +736,8 @@ def msg_list(pkg, search_path, ext):
     files = []
     for d in dir_list:
         files.extend([f for f in os.listdir(d) if f.endswith(ext)])
-    return [f[:-len(ext)] for f in files]
+    # sort list because listdir is filesystem specific
+    return sorted([f[:-len(ext)] for f in files])
 
 def generate_msg_from_spec(msg_context, spec, search_path, output_dir, package):
     """
