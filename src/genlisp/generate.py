@@ -674,7 +674,16 @@ def write_constants(s, spec):
                 s.write('\'(')
                 with Indent(s, indent_first=False):
                     for c in spec.constants:
-                        s.write('(:%s . %s)'%(c.name.upper(), c.val))
+                        if c.type == 'string':
+                            if '"' in c.val:
+                                # crude escaping of \ and "
+                                escaped = c.val.replace('\\', '\\\\')
+                                escaped = escaped.replace('\"', '\\"')
+                                s.write('(:%s . "%s")'%(c.name.upper(), escaped))
+                            else:
+                                s.write('(:%s . "%s")'%(c.name.upper(), c.val))
+                        else:
+                            s.write('(:%s . %s)'%(c.name.upper(), c.val))
             s.write(')', False)
             s.write(')')
 
